@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1d4534">
+  <meta name="description" content="Padamkan api, tebang sawit, dan pulihkan hutan. Game web gratis dengan Mas Owuh, monster pembakar sekaligus penanam sawit, dan ronde 90 detik.">
+  <title>Rimba Pulih — Padamkan. Tebang. Tumbuhkan.</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%231d4534'/%3E%3Cpath d='M32 51V27M32 35C9 35 12 13 12 13s24-2 20 22Zm0-9C31 6 53 9 53 9s2 20-21 17Z' fill='%23c8e987' stroke='%23c8e987' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <svg class="sprite-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-leaf" viewBox="0 0 32 32"><path d="M16 28V13M16 20C3 20 4 6 4 6s15-1 12 14Zm0-7C15 2 28 3 28 3s2 12-12 10Z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-fire" viewBox="0 0 32 32"><path d="M18 2c3 8-2 8 2 14 2-2 3-4 3-6 8 9 8 19-6 20C3 30 3 18 10 13c-1 5 2 7 3 5 3-5-1-10 5-16Z" fill="currentColor"/><path d="M16 17c2 4 0 5 3 7 3 6-7 7-7 1 0-3 2-5 4-8Z" fill="#ffe7a0"/></symbol>
+    <symbol id="i-palm" viewBox="0 0 32 32"><path d="m15 14 2 15h5l-4-15" fill="#9e663c" stroke="currentColor" stroke-width="1.5"/><path d="M17 14C10 12 5 13 2 18c0-8 7-10 15-4ZM17 14C9 5 5 8 2 9 6 1 14 5 17 14ZM17 14c-1-9 3-13 7-12-4 4-4 8-7 12Zm0 0c7-10 13-7 14-4-5-1-8 1-14 4Zm0 0c9-2 13 2 14 8-5-4-9-5-14-8Z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 13 8-13 8Z" fill="currentColor"/></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path d="m4 9 4 0 5-5v16l-5-5H4ZM17 8c3 2 3 6 0 8M20 5c5 4 5 10 0 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-muted" viewBox="0 0 24 24"><path d="m4 9 4 0 5-5v16l-5-5H4ZM17 9l5 6m0-6-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 32 32"><path d="M16 2C12 10 5 15 5 21a11 11 0 0 0 22 0c0-6-7-11-11-19Z" fill="currentColor"/><path d="M10 20c0 4 2 6 5 6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="i-axe" viewBox="0 0 32 32"><path d="m10 28 14-24" stroke="#9e663c" stroke-width="5" stroke-linecap="round"/><path d="m20 5 9 4-5 10-10-7Z" fill="currentColor" stroke="#213c2e" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+  </defs></svg>
+
+  <div class="page-shell play-shell" id="play-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Rimba Pulih"><span class="brand-icon"><svg><use href="#i-leaf"/></svg></span><span>RIMBA<span class="brand-light">PULIH</span></span></a>
+      <div class="top-actions"><button id="mode-toggle" class="mode-toggle" aria-pressed="false" title="Ganti antara mode Normal dan Ganas">Mode: Normal</button><button id="fullscreen-button" class="fullscreen-button" aria-label="Aktifkan layar penuh" aria-pressed="false">⛶ <span>Layar penuh</span></button><button class="icon-button" id="sound-button" aria-label="Suara aktif: ketuk untuk mematikan" aria-pressed="true"><svg><use href="#i-sound"/></svg><span>Suara ON</span></button></div>
+    </header>
+    <main class="play-main">
+      <section class="arena-panel" aria-label="Arena permainan">
+        <div class="arena-topline">
+          <div class="hud-state"><span class="status-light" id="status-light"></span><span id="game-status">Hutan siap dijaga</span><span id="monster-pace" class="monster-pace">Waspadai Mas Owuh</span></div>
+          <div class="hud-scores"><span class="hud-seeds">🌱 <strong id="seedlings-count">0</strong><small>bibit</small></span><span class="hud-palms">🌴 <strong id="palms-count">0</strong><small>sawit</small></span><span>🔥 <strong id="fire-count">0</strong><small>api</small></span><span class="hud-saved">💧 <strong id="saved-count">0</strong><small>padam</small></span></div>
+          <div class="timer-group"><strong id="timer" role="timer" aria-label="Waktu tersisa">01:30</strong><button id="pause-button" class="pause-button" aria-label="Jeda permainan" disabled><svg><use href="#i-pause"/></svg></button></div>
+          <div class="hud-smoke"><span id="haze-label">0% · Jernih</span><meter id="haze-meter" min="0" max="100" value="0" aria-label="Kepekatan kabut asap"></meter></div>
+          <div class="sr-only"><div id="balance-track"><span id="seedling-bar"></span><span id="palm-bar"></span></div><span id="balance-label"></span></div>
+        </div>
+        <div class="arena" id="arena" tabindex="0" aria-label="Map hutan. Gerak dengan tombol arah, Z untuk A siram, X untuk B cabut sawit.">
+            <div id="world" class="world">
+            <div class="terrain" aria-hidden="true"><span class="terrain-path path-one"></span><span class="terrain-path path-two"></span><span class="pond"></span><span class="rock rock-one"></span><span class="rock rock-two"></span><span class="grass grass-one"></span><span class="grass grass-two"></span><span class="grass grass-three"></span></div>
+            <div id="map-terrain" class="map-terrain" aria-hidden="true"></div>
+            <div id="forest-grid" class="forest-grid" aria-label="Petak hutan"></div>
+            <div class="monster-layer" aria-hidden="true"><div id="monster" class="monster" data-expression="neutral"><span class="monster-sprite"></span><small><strong>Mas Owuh</strong><span>MEMBAKAR</span></small></div></div>
+            <div class="player-layer" aria-hidden="true"><div id="player" class="player" data-expression="neutral"><span class="player-sprite"></span><small>MAS GABRAN</small></div></div>
+            <div id="effect-layer" class="effect-layer" aria-hidden="true"></div>
+            </div>
+            <div id="haze-layer" class="haze-layer" aria-hidden="true"></div>
+
+            <div id="minimap" class="minimap" aria-hidden="true"><span id="mini-player" class="mini-player"></span></div>
+            <div class="game-overlay" id="start-overlay"><div class="overlay-card start-card"><span class="card-emblem"><svg><use href="#i-leaf"/></svg></span><p class="eyebrow">SIAP MAIN?</p><h2>Pulihkan rimbamu.</h2><p>Geser joystick bulat untuk mendekati api dan sawit. Lewati batu, kolam, dan batang tumbang.</p><div class="start-rules"><span><svg><use href="#i-drop"/></svg><strong>A · Siram</strong>Dekati api</span><span><svg><use href="#i-axe"/></svg><strong>B · Cabut</strong>Tekan atau tahan</span></div><div class="win-rule"><svg><use href="#i-leaf"/></svg><span>Menang saat waktu habis:<br><strong>bibit baru &gt; sawit tersisa</strong></span></div><button class="primary-button" id="start-button">Mulai main <svg><use href="#i-play"/></svg></button><small class="input-hint">Geser joystick bulat. A siram · B cabut. Pilih Mode Ganas di atas untuk tantangan lebih cepat.</small></div></div>
+            <div class="game-overlay" id="pause-overlay" hidden><div class="overlay-card compact-card"><span class="card-emblem"><svg><use href="#i-pause"/></svg></span><h2>Tarik napas dulu.</h2><p>Waktu dan Mas Owuh sedang berhenti.</p><button class="primary-button" id="resume-button">Lanjutkan <svg><use href="#i-play"/></svg></button><button class="text-button" id="restart-button">Mulai ulang ronde</button></div></div>
+          </div>
+        <div class="controller-panel" aria-label="Gamepad Mas Gabran">
+          <div class="gamepad-layout">
+            <div class="joystick-slot"><button id="joystick" class="joystick pad-button" aria-label="Joystick: seret untuk bergerak ke segala arah" disabled><span class="joystick-rim" aria-hidden="true"></span><span class="joystick-knob" id="joystick-knob" aria-hidden="true"></span></button><span class="joystick-caption">GERAK</span></div>
+            <div class="controller-help"><strong>MAS GABRAN</strong><span id="action-hint">Geser joystick bulat untuk bergerak.</span><span id="controller-status">Joystick · WASD / arah, Z / X</span><p id="audio-status" class="audio-status" role="status">Suara aktif saat Mulai ditekan.</p></div>
+            <div class="action-pad" role="group" aria-label="Aksi hero"><button id="action-b" class="pad-button action-button button-b" aria-label="B: cabut sawit di dekat hero" disabled><b>B</b><span>CABUT</span></button><button id="action-a" class="pad-button action-button button-a" aria-label="A: siram api di dekat hero" disabled><b>A</b><span>SIRAM</span></button></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div class="game-overlay ending-overlay" id="result-overlay" role="dialog" aria-modal="true" aria-labelledby="result-title" hidden><div class="overlay-card result-card"><span class="card-emblem" id="result-emblem"><svg><use href="#i-leaf"/></svg></span><p class="eyebrow" id="result-eyebrow">WAKTU HABIS</p><h2 id="result-title">Rimba kembali hidup!</h2><figure class="victory-photo" id="victory-photo" hidden><img loading="lazy" decoding="async" src="./assets/victory-indonesia.png" width="1536" height="1024" alt="Kolase pemberitaan dan suasana jalan diselimuti kabut asap jingga di Indonesia."></figure><figure class="defeat-photo" id="defeat-photo" hidden><img loading="lazy" decoding="async" src="./assets/defeat-owuh.png" width="1536" height="1024" alt="Ilustrasi villain Mas Owuh tersenyum licik sambil menimbun uang, koin emas, dan buah sawit di depan hutan terbakar."></figure><p id="result-description"></p><div class="result-counts"><span><strong id="result-seedlings">0</strong>bibit baru</span><b id="result-comparison">&gt;</b><span><strong id="result-palms">0</strong>sawit tersisa</span></div><p class="result-detail" id="result-detail"></p><button class="primary-button" id="replay-button">Main lagi <svg><use href="#i-play"/></svg></button></div></div>
+    <div class="sr-only" aria-live="polite" id="announcer"></div>
+  </div>
+</body>
+</html>
